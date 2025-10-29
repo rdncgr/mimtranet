@@ -118,6 +118,11 @@ Mimtranet/
 
 - Otomatik olarak `main` dalına her push’ta yayınlanır.
 - Yayın adresi: `https://rdncgr.github.io/mimtranet/` (Actions tamamlandıktan sonra aktif olur)
+- **Özel Domain**: `CNAME.example` dosyasını kullanarak kendi domain'inizi ekleyebilirsiniz.
+  1. `CNAME.example` dosyasını `CNAME` olarak kopyalayın
+  2. İçine domain'inizi yazın (örn: `mimtranet.yourdomain.com`)
+  3. GitHub repository ayarlarından Pages → Custom domain ekleyin
+  4. DNS ayarlarını domain sağlayıcınızda yapılandırın
 
 ### Notlarım Kullanımı
 1. "Notlarım" menüsüne tıklayın

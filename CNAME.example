@@ -1,0 +1,12 @@
+# Özel domain için CNAME dosyası
+# 
+# Kullanım:
+# 1. Bu dosyayı "CNAME" olarak yeniden adlandırın (uzantı olmadan)
+# 2. GitHub repository ayarlarından Pages sekmesine gidin
+# 3. Custom domain alanına domain'inizi yazın (örn: mimtranet.yourdomain.com)
+# 4. "CNAME" dosyasının içine domain'inizi yazın ve kaydedin
+# 5. DNS ayarlarınızı domain sağlayıcınızda yapılandırın (A/CNAME kayıtları)
+#
+# Örnek:
+# mimtranet.yourdomain.com
+

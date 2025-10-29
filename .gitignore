@@ -22,3 +22,7 @@ build/
 *.swp
 *.swo
 
+# CNAME - kullanıcı kendi domain'ini ekleyebilir
+# CNAME.example dosyasını kullanarak CNAME oluşturabilirsiniz
+!CNAME.example
+
