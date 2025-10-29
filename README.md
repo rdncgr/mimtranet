@@ -1,5 +1,17 @@
 # Mimtranet
 
+<p align="left">
+  <a href="https://github.com/rdncgr/mimtranet/actions/workflows/deploy-pages.yml">
+    <img src="https://img.shields.io/github/actions/workflow/status/rdncgr/mimtranet/deploy-pages.yml?label=pages" alt="Pages Deploy Status" />
+  </a>
+  <a href="https://github.com/rdncgr/mimtranet">
+    <img src="https://img.shields.io/github/last-commit/rdncgr/mimtranet" alt="Last Commit" />
+  </a>
+  <a href="https://github.com/rdncgr/mimtranet/stargazers">
+    <img src="https://img.shields.io/github/stars/rdncgr/mimtranet?style=social" alt="Stars" />
+  </a>
+</p>
+
 Tarayıcı üzerinde çalışan, tamamen tarayıcı yerel depolama (LocalStorage) kullanan, sunucuya ihtiyaç duymayan kapsamlı bir intranet yönetim sistemi.
 
 ## 🚀 Özellikler
@@ -101,6 +113,11 @@ Mimtranet/
 1. `index.html` dosyasını tarayıcıda açın
 2. Sistem otomatik olarak Dashboard sayfasını gösterecektir
 3. Sol menüden modüller arası geçiş yapabilirsiniz
+
+### Canlı Demo (GitHub Pages)
+
+- Otomatik olarak `main` dalına her push’ta yayınlanır.
+- Yayın adresi: `https://rdncgr.github.io/mimtranet/` (Actions tamamlandıktan sonra aktif olur)
 
 ### Notlarım Kullanımı
 1. "Notlarım" menüsüne tıklayın
@@ -241,6 +258,16 @@ Bu proje açık kaynak kodludur ve özel kullanım için geliştirilmiştir. Tic
 3. Değişikliklerinizi commit edin (`git commit -m 'Add some AmazingFeature'`)
 4. Branch'inizi push edin (`git push origin feature/AmazingFeature`)
 5. Pull Request oluşturun
+
+## 🏷️ Sürümler (Releases)
+
+- Yeni sürüm oluşturmak için:
+  1. Değişiklikleri commit/push edin
+  2. Versiyon etiketi verin:
+     - `git tag v0.1.0 && git push origin v0.1.0`
+  3. GitHub → Releases → “Draft a new release” üzerinden notları ekleyin
+
+Not: Sürüm numaralandırma için SemVer önerilir (MAJOR.MINOR.PATCH).
 
 ## 📞 İletişim
 
