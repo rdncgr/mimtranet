@@ -1,0 +1,1512 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mimtranet</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+</head>
+<body>
+    <div class="wrapper">
+        <!-- Sidebar -->
+        <nav id="sidebar" class="sidebar">
+            <div class="sidebar-header">
+                <img src="rdncgr.png" alt="Logo" class="logo">
+                <h3>Mimtranet</h3>
+            </div>
+            
+            <ul class="list-unstyled components">
+                <li class="active" id="menu-dashboard">
+                    <a href="#dashboard" data-page="dashboard">
+                        <i class="bi bi-speedometer2"></i>
+                        Dashboard
+                    </a>
+                </li>
+                <li id="menu-notes">
+                    <a href="#notes" data-page="notes">
+                        <i class="bi bi-journal-text"></i>
+                        Notlarım
+                    </a>
+                </li>
+                <li id="menu-sablonlar">
+                    <a href="#sablonlar" data-page="sablonlar">
+                        <i class="bi bi-file-earmark-code"></i>
+                        Şablonlar
+                    </a>
+                </li>
+                <li id="menu-evraklar">
+                    <a href="#evraklar" data-page="evraklar">
+                        <i class="bi bi-folder2-open"></i>
+                        Evraklar
+                    </a>
+                </li>
+                <li id="menu-teklifler">
+                    <a href="#teklifler" data-page="teklifler">
+                        <i class="bi bi-file-earmark-text"></i>
+                        Teklifler
+                    </a>
+                </li>
+                <li id="menu-araclar">
+                    <a href="#araclar" data-page="araclar">
+                        <i class="bi bi-calculator"></i>
+                        Araçlar
+                    </a>
+                </li>
+
+                <li class="category-header">
+                    <div class="category-title">
+                        <i class="bi bi-file-earmark-excel"></i>
+                        Excel Dosyaları
+                    </div>
+                    <div id="excel-files-list" class="category-content">
+                        <!-- Excel dosyaları burada listelenecek -->
+                    </div>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Page Content -->
+        <div id="content">
+            <!-- Top Navigation -->
+            <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
+                <div class="container-fluid">
+                    <h1 class="page-title mb-0" id="navbar-page-title">Dashboard</h1>
+                    <div class="ms-auto d-flex align-items-center gap-2">
+                        
+                        <div id="page-actions" class="d-flex gap-2 align-items-center">
+                            <!-- Sayfa özel butonları buraya gelecek (Not Ekle butonu) -->
+                        </div>
+                        <button class="btn btn-primary" id="sablonAddBtn" title="Şablon Ekle">
+                            <i class="bi bi-file-earmark-code"></i> Şablon Ekle
+                        </button>
+                        <div class="dropdown" id="parametrelerDropdown" style="display: none;">
+                            <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-gear"></i> Parametreler
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#" onclick="mimtranet.showParametreAddModal()"><i class="bi bi-plus-circle"></i> Parametre Ekle</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="mimtranet.showParametreListModal()"><i class="bi bi-list-ul"></i> Parametreleri Yönet</a></li>
+                            </ul>
+                        </div>
+                        <button class="btn btn-outline-secondary" id="hazirMetinlerBtn" onclick="mimtranet.showHazirMetinlerModal()" title="Hazır Metinler" style="display: none;">
+                            <i class="bi bi-file-text"></i> Hazır Metinler
+                        </button>
+                        <button class="btn btn-primary" id="evrakEkleBtn" title="Evrak Ekle">
+                            <i class="bi bi-folder-plus"></i> Evrak Ekle
+                        </button>
+                        
+                        <button id="settingsBtn" class="btn btn-outline-secondary" title="Ayarlar" data-page="settings">
+                            <i class="bi bi-gear-fill"></i>
+                        </button>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Main Content Area -->
+            <div class="container-fluid p-4">
+                <div id="page-content">
+                    <!-- Dashboard Page -->
+                    <div id="dashboard-page" class="page active">
+                        <!-- İlk satır: 3 sütun (%33 genişlik) -->
+                        <div class="row">
+                            <!-- Favori Notlar Widget -->
+                            <div class="col-lg-4 col-md-6 col-12 mb-4">
+                                <div class="content-card h-100">
+                                    <h5 class="card-title mb-4">
+                                        <i class="bi bi-star-fill text-warning"></i> Favori Notlar
+                                    </h5>
+                                    <div id="dashboard-favorites">
+                                        <!-- Favori notlar burada listelenecek -->
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Son 5 Not Widget -->
+                            <div class="col-lg-4 col-md-6 col-12 mb-4">
+                                <div class="content-card h-100">
+                                    <h5 class="card-title mb-4">
+                                        <i class="bi bi-clock-history text-info"></i> Son 5 Not
+                                    </h5>
+                                    <div id="dashboard-recent-notes">
+                                        <!-- Son 5 not burada listelenecek -->
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Favori Şablonlar Widget -->
+                            <div class="col-lg-4 col-md-12 col-12 mb-4">
+                                <div class="content-card h-100">
+                                    <h5 class="card-title mb-4">
+                                        <i class="bi bi-star-fill text-warning"></i> Favori Şablonlar
+                                    </h5>
+                                    <div id="dashboard-favorite-templates">
+                                        <!-- Favori şablonlar burada listelenecek -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- İkinci satır: Favori Evraklar Widget -->
+                        <div class="row">
+                            <div class="col-lg-6 col-md-12 col-12 mb-4">
+                                <div class="content-card h-100">
+                                    <h5 class="card-title mb-4">
+                                        <i class="bi bi-star-fill text-warning"></i> Favori Evraklar
+                                    </h5>
+                                    <div id="favori-evraklar-widget">
+                                        <!-- Favori evraklar burada listelenecek -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Notes Page -->
+                    <div id="notes-page" class="page">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="content-card">
+                                    <div class="d-flex justify-content-between align-items-center mb-4">
+                                        <div class="d-flex gap-2">
+                                            <input type="text" class="form-control" id="notes-search" placeholder="Notlarda ara..." style="width: 250px;">
+                                        </div>
+                                    </div>
+                                    <div class="table-responsive">
+                                        <table class="table table-hover" id="notes-table">
+                                            <thead class="table-dark">
+                                                <tr>
+                                                    <th style="width: 25%;">Başlık</th>
+                                                    <th style="width: 45%;">Açıklama</th>
+                                                    <th style="width: 20%;">Tarih</th>
+                                                    <th style="width: 10%;">İşlemler</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="notes-list">
+                                                <!-- Notlar burada listelenecek -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Excel File View Page -->
+                    <div id="excel-file-view-page" class="page">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="content-card">
+                                    <div id="excel-table-container">
+                                        <!-- Excel tablosu burada görüntülenecek -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Teklifler Page -->
+                    <div id="teklifler-page" class="page">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="content-card">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover" id="teklifler-table">
+                                            <thead class="table-dark">
+                                                <tr>
+                                                    <th>Unvan</th>
+                                                    <th>TCKN</th>
+                                                    <th>Ad Soyad</th>
+                                                    <th>Telefon</th>
+                                                    <th>E-posta</th>
+                                                    <th>Mal Bedeli</th>
+                                                    <th>Mal Tanıtımı</th>
+                                                    <th>Peşinat</th>
+                                                    <th>Peşinat Oranı</th>
+                                                    <th>Vade</th>
+                                                    <th>Şube</th>
+                                                    <th>Para Birimi</th>
+                                                    <th>Kira Para Birimi</th>
+                                                    <th>Notlar</th>
+                                                    <th>İşlemler</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="teklifler-list">
+                                                <!-- Teklifler burada listelenecek -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Evraklar Page -->
+                    <div id="evraklar-page" class="page">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="content-card">
+                                    <div class="mb-3">
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fas fa-search"></i></span>
+                                            <input type="text" class="form-control" id="evrakArama" placeholder="Evrak başlığı veya içeriğinde ara..." oninput="evrakManager.filterEvraklar()">
+                                        </div>
+                                    </div>
+                                    <div id="evraklar-listesi" class="table-responsive">
+                                        <table class="table table-hover" id="evraklar-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Dosya Adı</th>
+                                                    <th>İçerik</th>
+                                                    <th>Dosyalar</th>
+                                                    <th style="width:180px;">İşlemler</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <!-- Evraklar burada listelenecek -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Araçlar Page -->
+                    <div id="araclar-page" class="page">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-12 mb-4">
+                                <div class="content-card">
+                                    <h5 class="card-title mb-4">
+                                        <i class="bi bi-calculator text-primary"></i> KDV ve Yüzde Hesaplayıcı
+                                    </h5>
+                                    
+                    <!-- Girdi Alanları -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-3">
+                            <label for="tutarInput" class="form-label">Değer</label>
+                            <input type="text" class="form-control" id="tutarInput" placeholder="0,00">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="payInput" class="form-label">Pay</label>
+                            <input type="text" class="form-control" id="payInput" placeholder="0,00">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="kdvInput" class="form-label">KDV Oranı (%)</label>
+                            <select class="form-select" id="kdvInput">
+                                <option value="20">%20</option>
+                                <option value="18">%18</option>
+                                <option value="10">%10</option>
+                                <option value="8">%8</option>
+                                <option value="1">%1</option>
+                                <option value="0">%0</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="yuzdeInput" class="form-label">Yüzde Oranı (%)</label>
+                            <input type="number" class="form-control" id="yuzdeInput" placeholder="0" step="0.01">
+                        </div>
+                    </div>
+                                    
+                                    <!-- Sonuçlar -->
+                                    <div id="hesaplamaSonuclari" style="display: none;">
+                                        <!-- KDV Bilgileri -->
+                                        <div class="mb-4">
+                                            <h6 class="text-success mb-3">
+                                                <i class="bi bi-receipt"></i> KDV Bilgileri
+                                            </h6>
+                                            <div class="row g-2">
+                                                <div class="col-md-6">
+                                                    <div class="bg-light p-3 rounded">
+                                                        <small class="text-muted">KDV Hariç Tutar</small>
+                                                        <div class="fw-bold" id="kdvHaricTutar">0.00 ₺</div>
+                                                        <small class="text-muted">KDV Matrahı: <span id="kdvMatrahi1">0.00 ₺</span></small>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="bg-light p-3 rounded">
+                                                        <small class="text-muted">KDV Dahil Tutar</small>
+                                                        <div class="fw-bold" id="kdvDahilTutar">0.00 ₺</div>
+                                                        <small class="text-muted">KDV Matrahı: <span id="kdvMatrahi2">0.00 ₺</span></small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                        <!-- Yüzde Bilgileri -->
+                        <div class="mb-4">
+                            <h6 class="text-info mb-3">
+                                <i class="bi bi-percent"></i> Yüzde Bilgileri
+                            </h6>
+                            <div class="row g-2">
+                                <div class="col-md-3">
+                                    <div class="bg-light p-3 rounded">
+                                        <small class="text-muted" id="yuzdeArtiLabel">Tutarın + Yüzdesi</small>
+                                        <div class="fw-bold text-success" id="tutarArtiYuzde">0.00 ₺</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="bg-light p-3 rounded">
+                                        <small class="text-muted" id="yuzdeEksiLabel">Tutarın - Yüzdesi</small>
+                                        <div class="fw-bold text-danger" id="tutarEksiYuzde">0.00 ₺</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="bg-light p-3 rounded">
+                                        <small class="text-muted" id="yuzdeOraniLabel">Yüzde Oranı</small>
+                                        <div class="fw-bold text-primary" id="yuzdeOraniDegeri">0.00 ₺</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="bg-light p-3 rounded">
+                                        <small class="text-muted">Pay Oranı</small>
+                                        <div class="fw-bold text-warning" id="payOraniSonucu">%0</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+                    <!-- Şablonlar Page -->
+                    <div id="sablonlar-page" class="page">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="content-card">
+                                    <div class="d-flex justify-content-between align-items-center mb-4">
+                                        <div class="d-flex gap-2">
+                                            <input type="text" class="form-control" id="sablonArama" placeholder="Şablon adında ara..." style="width: 250px;">
+                                        </div>
+                                    </div>
+                                    <div class="table-responsive">
+                                        <table class="table table-hover" id="sablonlar-table">
+                                            <thead class="table-dark">
+                                                <tr>
+                                                    <th style="width: 30%;">Şablon Adı</th>
+                                                    <th style="width: 55%;">İçerik Önizleme</th>
+                                                    <th style="width: 15%;">İşlemler</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="sablonlar-list">
+                                                <!-- Şablonlar burada listelenecek -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Settings Page completely removed - using side panel only -->
+
+    <!-- Excel Upload Modal -->
+    <div class="modal fade" id="excelUploadModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Excel Dosyası Ekle</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="excelUploadForm">
+                        <div class="mb-3">
+                            <label for="excelTitle" class="form-label">Başlık</label>
+                            <input type="text" class="form-control" id="excelTitle" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="excelFile" class="form-label">Excel Dosyası (.xls, .xlsx)</label>
+                            <input type="file" class="form-control" id="excelFile" accept=".xls,.xlsx" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                    <button type="button" class="btn btn-primary" onclick="mimtranet.uploadExcel()">Yükle</button>
+                </div>
+            </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <!-- Note Add Modal -->
+    <div class="modal fade" id="noteAddModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="noteModalTitle">Yeni Not Ekle</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="noteAddForm">
+                        <div class="mb-3">
+                            <label for="noteTitle" class="form-label">Başlık</label>
+                            <input type="text" class="form-control" id="noteTitle" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="noteContentEditor" class="form-label">İçerik</label>
+                            <div class="position-relative">
+                                <textarea id="noteContentEditor" name="content" style="min-height: 350px;"></textarea>
+                                <div id="editor-loading" class="position-absolute top-50 start-50 translate-middle text-muted" style="display: none;">
+                                    <div class="spinner-border spinner-border-sm me-2" role="status">
+                                        <span class="visually-hidden">Yükleniyor...</span>
+                                    </div>
+                                    Editör yükleniyor...
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                    <button type="button" class="btn btn-primary" onclick="mimtranet.addNote()">Kaydet</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Note Preview Modal -->
+    <div class="modal fade" id="notePreviewModal" tabindex="-1" aria-labelledby="notePreviewModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="notePreviewTitle">Not Başlığı</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="notePreviewContent">
+                        <!-- Not içeriği burada görüntülenecek -->
+                    </div>
+                </div>
+                <div class="modal-footer" id="notePreviewModalFooter">
+                    <!-- İşlem butonları burada dinamik olarak eklenecek -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Teklif Modal -->
+    <div class="modal fade" id="teklifModal" tabindex="-1" aria-labelledby="teklifModalTitle" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="teklifModalTitle">Teklif Ekle</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="teklifForm" autocomplete="off" onsubmit="event.preventDefault(); mimtranet.saveTeklif();">
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <h6 class="mb-3 mt-2 text-primary">Müşteri Bilgileri</h6>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="teklifTitle" class="form-label">Unvan</label>
+                                <input type="text" class="form-control" id="teklifTitle">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="teklifVKN" class="form-label">TCKN/VKN</label>
+                                <input type="text" class="form-control" id="teklifVKN" minlength="10" maxlength="11" pattern="[0-9]{10,11}" placeholder="10-11 haneli TCKN veya VKN">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="teklifName" class="form-label">Ad Soyad</label>
+                                <input type="text" class="form-control" id="teklifName">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="teklifPhone" class="form-label">Telefon</label>
+                                <input type="text" class="form-control" id="teklifPhone">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="teklifEmail" class="form-label">E-posta</label>
+                                <input type="email" class="form-control" id="teklifEmail">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="teklifBranch" class="form-label">Şube</label>
+                                <input type="text" class="form-control" id="teklifBranch">
+                            </div>
+                            <div class="col-12">
+                                <hr class="my-2">
+                                <h6 class="mb-3 mt-2 text-primary">Ekipman Bilgileri</h6>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="teklifDesc" class="form-label">Mal Tanıtımı</label>
+                                <input type="text" class="form-control" id="teklifDesc">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="teklifPrice" class="form-label">Mal Bedeli</label>
+                                <input type="text" class="form-control" id="teklifPrice">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="teklifCurrency" class="form-label">Para Birimi</label>
+                                <select class="form-select" id="teklifCurrency">
+                                    <option value="TL">TL</option>
+                                    <option value="USD">USD</option>
+                                    <option value="EUR">EUR</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <hr class="my-2">
+                                <h6 class="mb-3 mt-2 text-primary">Ödeme Planı Tercihleri</h6>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="teklifDownPayment" class="form-label">Peşinat <span class="text-muted">(Peşinat Tutarı)</span></label>
+                                <input type="text" class="form-control" id="teklifDownPayment">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="teklifDownRate" class="form-label">Peşinat Oranı</label>
+                                <input type="text" class="form-control" id="teklifDownRate">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="teklifTerm" class="form-label">Vade</label>
+                                <select class="form-select" id="teklifTerm" multiple>
+                                    <option value="6">6 Ay</option>
+                                    <option value="12">12 Ay</option>
+                                    <option value="18">18 Ay</option>
+                                    <option value="24">24 Ay</option>
+                                    <option value="36">36 Ay</option>
+                                    <option value="48">48 Ay</option>
+                                    <option value="60">60 Ay</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="teklifRentCurrency" class="form-label">Ödeme Planı Para Birimi</label>
+                                <select class="form-select" id="teklifRentCurrency">
+                                    <option value="TL">TL</option>
+                                    <option value="USD">USD</option>
+                                    <option value="EUR">EUR</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <hr class="my-2">
+                                <h6 class="mb-3 mt-2 text-primary">Detaylar</h6>
+                            </div>
+                            <div class="col-12">
+                                <label for="teklifNotes" class="form-label">Notlar</label>
+                                <textarea class="form-control" id="teklifNotes" rows="2"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                        <button type="submit" class="btn btn-primary">Kaydet</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Evrak Ekle Modal -->
+    <div class="modal fade" id="evrakEkleModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Evrak Ekle</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="evrakEkleForm">
+                        <div class="mb-3">
+                            <label for="evrakDosyaAdi" class="form-label">Dosya Adı</label>
+                            <input type="text" class="form-control" id="evrakDosyaAdi" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="evrakDosya" class="form-label">Dosya Yükle (Birden fazla dosya seçebilirsiniz)</label>
+                            <input type="file" class="form-control" id="evrakDosya" multiple accept=".pdf,.doc,.docx,.txt,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png,.msg">
+                        </div>
+                        <div class="mb-3">
+                            <label for="evrakIcerik" class="form-label">İçerik</label>
+                            <textarea class="form-control" id="evrakIcerik" rows="2"></textarea>
+                        </div>
+                    </form>
+                    <div class="mb-3 text-center" id="evrakKayitDurum" style="display:none; color:#007bff; font-weight:500;">Kaydediliyor...</div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                    <button type="button" class="btn btn-primary" id="evrakKaydetBtn">Kaydet</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Evrak Düzenle Modal -->
+    <div class="modal fade" id="evrakDuzenleModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Evrak Düzenle</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="evrakDuzenleForm">
+                        <input type="hidden" id="duzenleIndex">
+                        <div class="mb-3">
+                            <label for="duzenleDosyaAdi" class="form-label">Dosya Adı</label>
+                            <input type="text" class="form-control" id="duzenleDosyaAdi" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="duzenleIcerik" class="form-label">İçerik</label>
+                            <textarea class="form-control" id="duzenleIcerik" rows="2"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="duzenleDosya" class="form-label">Dosya Değiştir (İsteğe bağlı)</label>
+                            <input type="file" class="form-control" id="duzenleDosya" multiple accept=".pdf,.doc,.docx,.txt,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png,.msg">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Mevcut Dosyalar</label>
+                            <div id="duzenleDosyaListesi" class="d-flex flex-wrap gap-2"></div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                    <button type="button" class="btn btn-primary" id="evrakGuncelleBtn">Güncelle</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Şablon Ekleme Modal -->
+    <div class="modal fade" id="sablonAddModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Yeni Şablon Ekle</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="sablonAddForm">
+                        <div class="mb-3">
+                            <label for="sablonName" class="form-label">Şablon Adı</label>
+                            <input type="text" class="form-control" id="sablonName" required>
+                            <div class="form-text">Liste görünümünde tanımlama amacıyla kullanılır</div>
+                        </div>
+                        
+                        <!-- E-posta Şablonu Checkbox -->
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="isEmailTemplate" onchange="mimtranet.toggleEmailFields()">
+                                <label class="form-check-label" for="isEmailTemplate">
+                                    Bu bir e-posta şablonu mu?
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <!-- E-posta Alanları (Başlangıçta gizli) -->
+                        <div id="emailFields" class="mb-3" style="display: none;">
+                            <div class="mb-3">
+                                <label for="emailSubject" class="form-label">E-Posta Konusu</label>
+                                <textarea class="form-control" id="emailSubject" rows="2" placeholder="E-posta konusu buraya yazılacak..."></textarea>
+                                <div class="form-text">Parametre kullanımı: /unvan, /tarih, /tutar gibi</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="emailTo" class="form-label">To (Alıcı)</label>
+                                    <input type="email" class="form-control" id="emailTo" placeholder="ornek@email.com">
+                                    <div class="form-text">E-posta adresi (isteğe bağlı)</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="emailCc" class="form-label">Cc (Kopya)</label>
+                                    <input type="email" class="form-control" id="emailCc" placeholder="kopya@email.com">
+                                    <div class="form-text">Kopya adresi (isteğe bağlı)</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="sablonContent" class="form-label">Şablon İçeriği</label>
+                            <textarea class="form-control" id="sablonContent" rows="6" placeholder="Örnek: Sayın /unvan, Krediniz /tarih itibari ile onaylanmıştır." required></textarea>
+                            <div class="form-text">
+                                <strong>Parametre Kullanımı:</strong> Değişken alanlar için "/" ile başlayan parametreler kullanın. 
+                                Örnek: /unvan, /tarih, /tutar, /ad_soyad
+                            </div>
+                            <div class="mt-2">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Hazır Metinler:</label>
+                                        <div class="dropdown">
+                                            <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" id="hazirMetinlerDropdownAdd" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="bi bi-file-text"></i> Hazır Metin Seç
+                                            </button>
+                                            <ul class="dropdown-menu" id="hazirMetinlerListAdd">
+                                                <!-- Hazır metinler burada listelenecek -->
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Önceden Tanımlı Parametreler:</label>
+                                        <div id="addParametreButtons" class="d-flex flex-wrap gap-1">
+                                            <!-- Parametre butonları burada dinamik olarak oluşturulacak -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                    <button type="button" class="btn btn-primary">Kaydet</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Şablon Düzenleme Modal -->
+    <div class="modal fade" id="sablonEditModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Şablon Düzenle</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="sablonEditForm">
+                        <div class="mb-3">
+                            <label for="editSablonName" class="form-label">Şablon Adı</label>
+                            <input type="text" class="form-control" id="editSablonName" required>
+                            <div class="form-text">Liste görünümünde tanımlama amacıyla kullanılır</div>
+                        </div>
+                        
+                        <!-- E-posta Şablonu Checkbox -->
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="editIsEmailTemplate" onchange="mimtranet.toggleEditEmailFields()">
+                                <label class="form-check-label" for="editIsEmailTemplate">
+                                    Bu bir e-posta şablonu mu?
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <!-- E-posta Alanları (Gizli) -->
+                        <div id="editEmailFields" class="mb-3" style="display: none;">
+                            <div class="mb-3">
+                                <label for="editEmailSubject" class="form-label">E-Posta Konusu</label>
+                                <textarea class="form-control" id="editEmailSubject" rows="2" placeholder="E-posta konusu buraya yazılacak..."></textarea>
+                                <div class="form-text">Parametre kullanımı: /unvan, /tarih, /tutar gibi</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="editEmailTo" class="form-label">To (Alıcı)</label>
+                                    <input type="email" class="form-control" id="editEmailTo" placeholder="ornek@email.com">
+                                    <div class="form-text">E-posta gönderilecek alıcı adresi</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="editEmailCc" class="form-label">Cc (Kopya)</label>
+                                    <input type="email" class="form-control" id="editEmailCc" placeholder="kopya@email.com">
+                                    <div class="form-text">Kopya gönderilecek adres (isteğe bağlı)</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="editSablonContent" class="form-label">Şablon İçeriği</label>
+                            <textarea class="form-control" id="editSablonContent" rows="6" required></textarea>
+                            <div class="form-text">
+                                <strong>Parametre Kullanımı:</strong> Değişken alanlar için "/" ile başlayan parametreler kullanın. 
+                                Örnek: /unvan, /tarih, /tutar, /ad_soyad
+                            </div>
+                            <div class="mt-2">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Hazır Metinler:</label>
+                                        <div class="dropdown">
+                                            <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" id="hazirMetinlerDropdownEdit" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="bi bi-file-text"></i> Hazır Metin Seç
+                                            </button>
+                                            <ul class="dropdown-menu" id="hazirMetinlerListEdit">
+                                                <!-- Hazır metinler burada listelenecek -->
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Önceden Tanımlı Parametreler:</label>
+                                        <div id="editParametreButtons" class="d-flex flex-wrap gap-1">
+                                            <!-- Parametre butonları burada dinamik olarak oluşturulacak -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                    <button type="button" class="btn btn-primary">Güncelle</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Şablon Kopyalama Modal -->
+    <div class="modal fade" id="sablonCopyModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Şablon Parametrelerini Doldurun</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Parametreler:</label>
+                        <div id="sablonParameters">
+                            <!-- Parametreler burada dinamik olarak oluşturulacak -->
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <label class="form-label">Sonuç Önizleme:</label>
+                        <div class="bg-success bg-opacity-10 p-3 rounded border border-success" id="sablonPreview">
+                            <!-- Doldurulmuş şablon burada gösterilecek -->
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                    <button type="button" class="btn btn-primary" onclick="mimtranet.sendSablonByEmail()"><i class="bi bi-envelope"></i> E-Posta ile Gönder</button>
+                    <button type="button" class="btn btn-success">İçeriği Kopyala</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Parametre Ekleme Modal -->
+    <div class="modal fade" id="parametreAddModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Yeni Parametre Ekle</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="parametreAddForm">
+                        <div class="mb-3">
+                            <label for="parametreName" class="form-label">Parametre Adı</label>
+                            <input type="text" class="form-control" id="parametreName" placeholder="Örnek: unvan, tarih, tutar" required>
+                            <div class="form-text">Parametre adı "/" işareti olmadan, bitişik, özel karakter kullanmadan yazılmalıdır.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="parametreType" class="form-label">Input Türü</label>
+                            <select class="form-select" id="parametreType" required>
+                                <option value="text">Metin</option>
+                                <option value="date">Tarih</option>
+                                <option value="number">Sayı</option>
+                                <option value="email">E-posta</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="parametreDescription" class="form-label">Açıklama (İsteğe Bağlı)</label>
+                            <input type="text" class="form-control" id="parametreDescription" placeholder="Bu parametrenin ne için kullanıldığını açıklayın">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                    <button type="button" class="btn btn-primary" onclick="mimtranet.addParametre()">Kaydet</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Parametre Yönetimi Modal -->
+    <div class="modal fade" id="parametreListModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Parametreleri Yönet</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th style="width: 25%;">Parametre Adı</th>
+                                    <th style="width: 20%;">Input Türü</th>
+                                    <th style="width: 35%;">Açıklama</th>
+                                    <th style="width: 20%;">İşlemler</th>
+                                </tr>
+                            </thead>
+                            <tbody id="parametreler-list">
+                                <!-- Parametreler burada listelenecek -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Parametre Düzenleme Modal -->
+    <div class="modal fade" id="parametreEditModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Parametre Düzenle</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="parametreEditForm">
+                        <div class="mb-3">
+                            <label for="editParametreName" class="form-label">Parametre Adı</label>
+                            <input type="text" class="form-control" id="editParametreName" required>
+                            <div class="form-text">Parametre adı "/" işareti olmadan, bitişik, özel karakter kullanmadan yazılmalıdır.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editParametreType" class="form-label">Input Türü</label>
+                            <select class="form-select" id="editParametreType" required>
+                                <option value="text">Metin</option>
+                                <option value="date">Tarih</option>
+                                <option value="number">Sayı</option>
+                                <option value="email">E-posta</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editParametreDescription" class="form-label">Açıklama (İsteğe Bağlı)</label>
+                            <input type="text" class="form-control" id="editParametreDescription">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                    <button type="button" class="btn btn-primary" onclick="mimtranet.updateParametre()">Güncelle</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hazır Metinler Modal -->
+    <div class="modal fade" id="hazirMetinlerModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Hazır Metinler</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h6 class="mb-0">Hazır Metinleriniz</h6>
+                        <button type="button" class="btn btn-primary btn-sm" onclick="mimtranet.showHazirMetinAddModal()">
+                            <i class="bi bi-plus-circle"></i> Yeni Metin Ekle
+                        </button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th style="width: 80%;">İçerik</th>
+                                    <th style="width: 20%;">İşlemler</th>
+                                </tr>
+                            </thead>
+                            <tbody id="hazir-metinler-list">
+                                <!-- Hazır metinler burada listelenecek -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hazır Metin Ekleme Modal -->
+    <div class="modal fade" id="hazirMetinAddModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Yeni Hazır Metin Ekle</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="hazirMetinAddForm">
+                        <div class="mb-3">
+                            <label for="hazirMetinIcerik" class="form-label">İçerik</label>
+                            <textarea class="form-control" id="hazirMetinIcerik" rows="8" placeholder="Hazır metin içeriği" required></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                    <button type="button" class="btn btn-primary" onclick="mimtranet.addHazirMetin()">Kaydet</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hazır Metin Düzenleme Modal -->
+    <div class="modal fade" id="hazirMetinEditModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Hazır Metin Düzenle</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="hazirMetinEditForm">
+                        <div class="mb-3">
+                            <label for="editHazirMetinIcerik" class="form-label">İçerik</label>
+                            <textarea class="form-control" id="editHazirMetinIcerik" rows="8" required></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                    <button type="button" class="btn btn-primary" onclick="mimtranet.updateHazirMetin()">Güncelle</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TinyMCE WYSIWYG Editor -->
+    <!-- Sabit İstatistikler Footer -->
+    <div class="fixed-bottom py-2" id="stats-footer" style="z-index: 1000; margin-left: 250px; transition: margin-left 0.3s;">
+        <div class="container-fluid">
+            <div class="row text-center" id="dashboard-stats">
+                <!-- İstatistikler burada 6 bölümde tek satır halinde listelenecek -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Panel -->
+    <div class="settings-panel-overlay" id="settings-panel-overlay"></div>
+    <div class="settings-panel" id="settings-panel">
+        <div class="settings-panel-header">
+            <h5><i class="bi bi-gear-fill"></i> Ayarlar</h5>
+            <button class="settings-panel-close" id="settings-panel-close">
+                <i class="bi bi-x"></i>
+            </button>
+        </div>
+        
+        <!-- Settings Accordion -->
+        <div class="accordion" id="settingsAccordion">
+            <!-- Görünüm Ayarları -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingAppearance">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAppearance" aria-expanded="true" aria-controls="collapseAppearance">
+                        <i class="bi bi-palette me-2"></i> Görünüm Ayarları
+                    </button>
+                </h2>
+                <div id="collapseAppearance" class="accordion-collapse collapse show" aria-labelledby="headingAppearance" data-bs-parent="#settingsAccordion">
+                    <div class="accordion-body">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="darkModeTogglePanel">
+                                    <label class="form-check-label" for="darkModeTogglePanel">
+                                        <i class="bi bi-moon"></i> Karanlık Mod
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="statsTogglePanel">
+                                    <label class="form-check-label" for="statsTogglePanel">
+                                        <i class="bi bi-bar-chart"></i> İstatistikler Bölümü
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Menü Görünürlük Ayarları -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingMenu">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMenu" aria-expanded="false" aria-controls="collapseMenu">
+                        <i class="bi bi-list me-2"></i> Menü Görünürlük Ayarları
+                    </button>
+                </h2>
+                <div id="collapseMenu" class="accordion-collapse collapse" aria-labelledby="headingMenu" data-bs-parent="#settingsAccordion">
+                    <div class="accordion-body">
+                        <p class="text-muted mb-3">Hangi menü öğelerinin görünür olacağını seçin:</p>
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="menuDashboard" checked>
+                                    <label class="form-check-label" for="menuDashboard">
+                                        <i class="bi bi-speedometer2"></i> Dashboard
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="menuNotes" checked>
+                                    <label class="form-check-label" for="menuNotes">
+                                        <i class="bi bi-journal-text"></i> Notlarım
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="menuSablonlar" checked>
+                                    <label class="form-check-label" for="menuSablonlar">
+                                        <i class="bi bi-file-earmark-code"></i> Şablonlar
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="menuEvraklar" checked>
+                                    <label class="form-check-label" for="menuEvraklar">
+                                        <i class="bi bi-folder2-open"></i> Evraklar
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="menuTeklifler" checked>
+                                    <label class="form-check-label" for="menuTeklifler">
+                                        <i class="bi bi-file-earmark-text"></i> Teklifler
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="menuAraclar" checked>
+                                    <label class="form-check-label" for="menuAraclar">
+                                        <i class="bi bi-tools"></i> Araçlar
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-2 mt-3">
+                            <button class="btn btn-primary btn-sm" onclick="applyMenuVisibilitySettings()">
+                                <i class="bi bi-check-circle"></i> Uygula
+                            </button>
+                            <button class="btn btn-outline-secondary btn-sm" onclick="resetMenuVisibilitySettings()">
+                                <i class="bi bi-arrow-clockwise"></i> Sıfırla
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Veri Yönetimi -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingData">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseData" aria-expanded="false" aria-controls="collapseData">
+                        <i class="bi bi-database me-2"></i> Veri Yönetimi
+                    </button>
+                </h2>
+                <div id="collapseData" class="accordion-collapse collapse" aria-labelledby="headingData" data-bs-parent="#settingsAccordion">
+                    <div class="accordion-body">
+            
+            <!-- Tüm Veriler -->
+            <div class="card mb-2">
+                <div class="card-body py-2">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-title mb-1"><i class="bi bi-database"></i> Tüm Veriler</h6>
+                            <small class="text-muted">Tüm verileri indir veya yükle</small>
+                        </div>
+                        <div class="d-flex gap-1">
+                            <button class="btn btn-outline-success btn-sm px-2 py-1" onclick="mimtranet.exportAllData()" title="Tüm Verileri Dışa Aktar">
+                                <i class="bi bi-download"></i>
+                            </button>
+                            <button class="btn btn-outline-info btn-sm px-2 py-1" onclick="mimtranet.importAllData()" title="Tüm Verileri İçe Aktar">
+                                <i class="bi bi-upload"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Notlar -->
+            <div class="card mb-2">
+                <div class="card-body py-2 d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-title mb-1"><i class="bi bi-journal-text"></i> Notlar</h6>
+                        <small class="text-muted">Notları indir veya yükle</small>
+                    </div>
+                    <div class="d-flex gap-1">
+                        <button class="btn btn-outline-success px-2 py-1" onclick="mimtranet.exportNotes()" title="Dışa Aktar">
+                            <i class="bi bi-download"></i>
+                        </button>
+                        <button class="btn btn-outline-info px-2 py-1" onclick="mimtranet.importNotes()" title="İçe Aktar">
+                            <i class="bi bi-upload"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Evraklar -->
+            <div class="card mb-2">
+                <div class="card-body py-2 d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-title mb-1"><i class="bi bi-folder2-open"></i> Evraklar</h6>
+                        <small class="text-muted">Evrakları indir veya yükle</small>
+                    </div>
+                    <div class="d-flex gap-1">
+                        <button class="btn btn-outline-success px-2 py-1" onclick="mimtranet.exportEvraklar()" title="Dışa Aktar">
+                            <i class="bi bi-download"></i>
+                        </button>
+                        <button class="btn btn-outline-info px-2 py-1" onclick="mimtranet.importEvraklar()" title="İçe Aktar">
+                            <i class="bi bi-upload"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Şablonlar -->
+            <div class="card mb-2">
+                <div class="card-body py-2 d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-title mb-1"><i class="bi bi-file-earmark-code"></i> Şablonlar</h6>
+                        <small class="text-muted">Şablonları indir veya yükle</small>
+                    </div>
+                    <div class="d-flex gap-1">
+                        <button class="btn btn-outline-success px-2 py-1" onclick="mimtranet.exportSablonlar()" title="Dışa Aktar">
+                            <i class="bi bi-download"></i>
+                        </button>
+                        <button class="btn btn-outline-info px-2 py-1" onclick="mimtranet.importSablonlar()" title="İçe Aktar">
+                            <i class="bi bi-upload"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Parametreler -->
+            <div class="card mb-2">
+                <div class="card-body py-2 d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-title mb-1"><i class="bi bi-gear"></i> Parametreler</h6>
+                        <small class="text-muted">Parametreleri indir veya yükle</small>
+                    </div>
+                    <div class="d-flex gap-1">
+                        <button class="btn btn-outline-success px-2 py-1" onclick="mimtranet.exportParametreler()" title="Dışa Aktar">
+                            <i class="bi bi-download"></i>
+                        </button>
+                        <button class="btn btn-outline-info px-2 py-1" onclick="mimtranet.importParametreler()" title="İçe Aktar">
+                            <i class="bi bi-upload"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Hazır Metinler -->
+            <div class="card mb-2">
+                <div class="card-body py-2 d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-title mb-1"><i class="bi bi-file-text"></i> Hazır Metinler</h6>
+                        <small class="text-muted">Hazır metinleri indir veya yükle</small>
+                    </div>
+                    <div class="d-flex gap-1">
+                        <button class="btn btn-outline-success px-2 py-1" onclick="mimtranet.exportHazirMetinler()" title="Dışa Aktar">
+                            <i class="bi bi-download"></i>
+                        </button>
+                        <button class="btn btn-outline-info px-2 py-1" onclick="mimtranet.importHazirMetinler()" title="İçe Aktar">
+                            <i class="bi bi-upload"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tanıtım Turu -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingTour">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTour" aria-expanded="false" aria-controls="collapseTour">
+                        <i class="bi bi-play-circle me-2"></i> Tanıtım Turu
+                    </button>
+                </h2>
+                <div id="collapseTour" class="accordion-collapse collapse" aria-labelledby="headingTour" data-bs-parent="#settingsAccordion">
+                    <div class="accordion-body">
+                        <div class="card">
+                            <div class="card-body py-2 d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="card-title mb-1"><i class="bi bi-info-circle"></i> Uygulama Tanıtımı</h6>
+                                    <small class="text-muted">Mimtranet'in özelliklerini keşfetmek için tanıtım turunu başlatın</small>
+                                </div>
+                                <button class="btn btn-outline-primary btn-sm" onclick="mimtranet.resetOnboarding()" title="Tanıtım Turunu Başlat">
+                                    <i class="bi bi-arrow-clockwise"></i> Başlat
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Onboarding Overlay -->
+    <div id="onboardingOverlay" class="onboarding-overlay" style="display: none;">
+        <div class="onboarding-container">
+            <div class="onboarding-content-wrapper">
+                <div class="onboarding-header">
+                    <div class="w-100 text-center">
+                        <img src="rdncgr.png" alt="Logo" class="mb-3" style="height: 60px;">
+                        <h4 id="onboardingModalLabel">Mimtranet'e Hoş Geldiniz!</h4>
+                        <p class="text-muted mb-0">Uygulamayı kullanmaya başlamadan önce kısa bir tur yapalım</p>
+                    </div>
+                </div>
+                <div class="onboarding-body">
+                    <div class="onboarding-progress mb-4">
+                        <div class="progress" style="height: 6px;">
+                            <div class="progress-bar bg-primary" role="progressbar" style="width: 12%" id="onboardingProgress"></div>
+                        </div>
+                        <div class="d-flex justify-content-between mt-2">
+                            <small class="text-muted">Adım <span id="currentStep">1</span> / <span id="totalSteps">8</span></small>
+                            <small class="text-muted" id="stepProgress">12%</small>
+                        </div>
+                    </div>
+                    
+                    <div class="onboarding-content">
+                        <!-- Step 1: Dashboard -->
+                        <div class="onboarding-step active" data-step="1">
+                            <div class="text-center mb-4">
+                                <div class="onboarding-icon mb-3">
+                                    <i class="bi bi-speedometer2 text-primary" style="font-size: 3rem;"></i>
+                                </div>
+                                <h5>Dashboard</h5>
+                                <p class="text-muted">Ana sayfanızda notlarınızı, favori içeriklerinizi ve belgelerinizi özet halinde görüntüleyebilir, <strong>widget'lar aracılığıyla</strong> bu verilere hızlıca erişebilirsiniz. Arayüz, tüm bilgilerinizi düzenli ve verimli bir şekilde takip etmenizi sağlar.</p>
+                                <div class="alert alert-info mt-3">
+                                    <small><i class="bi bi-info-circle"></i> <strong>İpucu:</strong> Her sayfada yeni veri eklemek için sağ üst köşedeki butonları kullanabilirsiniz.</small>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 2: Notlarım -->
+                        <div class="onboarding-step" data-step="2">
+                            <div class="text-center mb-4">
+                                <div class="onboarding-icon mb-3">
+                                    <i class="bi bi-journal-text text-info" style="font-size: 3rem;"></i>
+                                </div>
+                                <h5>Notlarım</h5>
+                                <p class="text-muted">Kişisel notlarınızı oluşturup düzenleyebilirsiniz. <strong>Fotoğraf ekleyebilir</strong>, zengin metin editörü ile notlarınızı formatlayabilirsiniz. Bu sistemi kullanan diğer kişilerle <strong>not paylaşımı</strong> yapabilirsiniz.</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 3: Şablonlar -->
+                        <div class="onboarding-step" data-step="3">
+                            <div class="text-center mb-4">
+                                <div class="onboarding-icon mb-3">
+                                    <i class="bi bi-file-earmark-code text-success" style="font-size: 3rem;"></i>
+                                </div>
+                                <h5>Şablonlar</h5>
+                                <p class="text-muted">Sık kullandığınız belge şablonlarını oluşturup saklayabilirsiniz. <strong>Parametreler</strong> ile dinamik içerik oluşturun ve <strong>hazır metinler</strong> ile hızlı yazım yapın. Hazırlanan şablonları <strong>e-posta taslağı</strong> olarak da kullanabilirsiniz.</p>
+                                <div class="alert alert-light mt-3">
+                                    <small><strong>Örnek:</strong> "Sayın /musterino, /tarih tarihinde /urunadi için /tutar TL teklifimizi sunuyoruz."</small>
+                                </div>
+                                <div class="alert alert-info mt-3">
+                                    <small><i class="bi bi-envelope"></i> <strong>E-posta Entegrasyonu:</strong> "Outlook'a Gönder" butonu ile şablonunuzu Outlook e-posta içeriği olarak oluşturabilirsiniz.</small>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 4: Evraklar -->
+                        <div class="onboarding-step" data-step="4">
+                            <div class="text-center mb-4">
+                                <div class="onboarding-icon mb-3">
+                                    <i class="bi bi-folder2-open text-warning" style="font-size: 3rem;"></i>
+                                </div>
+                                <h5>Evraklar</h5>
+                                <p class="text-muted">Belgelerinizi düzenli bir şekilde saklayabilirsiniz. Evraklarınızı kolayca arayabilir ve yönetebilirsiniz.</p>
+                                <div class="alert alert-warning mt-3">
+                                    <small><i class="bi bi-exclamation-triangle"></i> <strong>Tarayıcı Uyumluluğu:</strong> Evraklar bölümü Chrome'da düzgün çalışır. Edge tarayıcısında bazı özellikler sınırlı olabilir.</small>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 5: Teklifler -->
+                        <div class="onboarding-step" data-step="5">
+                            <div class="text-center mb-4">
+                                <div class="onboarding-icon mb-3">
+                                    <i class="bi bi-file-earmark-text text-primary" style="font-size: 3rem;"></i>
+                                </div>
+                                <h5>Teklifler</h5>
+                                <p class="text-muted">Satış birimi için teklif taleplerini not alın ve daha sonra kullanın. <strong>E-posta ile gönderim</strong> yapabilir, tekliflerinizi takip edebilirsiniz. Teklif bilgilerinizi kaydedip tekrar kullanabilirsiniz.</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 6: Excel Dosyaları -->
+                        <div class="onboarding-step" data-step="6">
+                            <div class="text-center mb-4">
+                                <div class="onboarding-icon mb-3">
+                                    <i class="bi bi-file-earmark-spreadsheet text-success" style="font-size: 3rem;"></i>
+                                </div>
+                                <h5>Excel Dosyaları</h5>
+                                <p class="text-muted">Excel dosyalarınızı yükleyerek <strong>filtreler ile arama</strong> yapabilirsiniz. Tekrar tekrar dosya açma derdiniz olmaz. Verilerinizi hızlıca analiz edebilirsiniz.</p>
+                                <div class="alert alert-info mt-3">
+                                    <small><i class="bi bi-info-circle"></i> <strong>Bilgi:</strong> Yüklenen Excel dosyaları sol menüde ana menü altında görüntülenir ve kolayca erişilebilir.</small>
+                                </div>
+                                <div class="alert alert-warning mt-3">
+                                    <small><i class="bi bi-exclamation-triangle"></i> <strong>Önemli:</strong> Excel dosyasının tek bir sheet'e sahip olması ve düzgün, basit bir tablo yapısına sahip olması gerekmektedir.</small>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 7: Araçlar -->
+                        <div class="onboarding-step" data-step="7">
+                            <div class="text-center mb-4">
+                                <div class="onboarding-icon mb-3">
+                                    <i class="bi bi-calculator text-info" style="font-size: 3rem;"></i>
+                                </div>
+                                <h5>Araçlar</h5>
+                                <p class="text-muted">Hesap makinesine gerek duymadan hızlıca girilen rakamın <strong>yüzde ve KDV oranı</strong> hesaplanır. Günlük hesaplamalarınızı kolayca yapabilirsiniz.</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 8: Ayarlar -->
+                        <div class="onboarding-step" data-step="8">
+                            <div class="text-center mb-4">
+                                <div class="onboarding-icon mb-3">
+                                    <i class="bi bi-gear text-secondary" style="font-size: 3rem;"></i>
+                                </div>
+                                <h5>Ayarlar</h5>
+                                <p class="text-muted">Uygulamanızı kişiselleştirin! <strong>Karanlık mod</strong>, menü görünürlüğü, veri yönetimi ve daha fazlası. Ayarlar menüsünden tüm özellikleri kontrol edebilirsiniz.</p>
+                                <div class="alert alert-info mt-3">
+                                    <small><i class="bi bi-info-circle"></i> <strong>İpucu:</strong> Sağ üst köşedeki ayarlar butonuna tıklayarak tüm seçeneklere erişebilirsiniz.</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="onboarding-footer">
+                    <div class="w-100 d-flex justify-content-between">
+                        <button type="button" class="btn btn-outline-secondary" id="onboardingPrevBtn" disabled>
+                            <i class="bi bi-arrow-left"></i> Önceki
+                        </button>
+                        <div class="d-flex gap-2">
+                            <button type="button" class="btn btn-outline-primary" id="onboardingSkipBtn">
+                                Atla
+                            </button>
+                            <button type="button" class="btn btn-primary" id="onboardingNextBtn">
+                                Sonraki <i class="bi bi-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gizli dosya input elementleri -->
+    <input type="file" id="importAllDataInput" accept=".json" style="display: none;">
+    <input type="file" id="importNotesInput" accept=".json" style="display: none;">
+    <input type="file" id="importEvraklarInput" accept=".json" style="display: none;">
+    <input type="file" id="importSablonlarInput" accept=".json" style="display: none;">
+    <input type="file" id="importParametrelerInput" accept=".json" style="display: none;">
+    <input type="file" id="importHazirMetinlerInput" accept=".json" style="display: none;">
+
+    <script src="tinymce/tinymce.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="script.js"></script>
+
+</body>
+</html>
