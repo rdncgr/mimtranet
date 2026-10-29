@@ -3,7 +3,7 @@
 
 <p align="left">
   <a href="https://github.com/rdncgr/mimtranet/releases">
-    <img src="https://img.shields.io/badge/sürüm-v3.1.28-blue.svg?style=flat-square" alt="Sürüm" />
+    <img src="https://img.shields.io/badge/sürüm-v3.1.35-blue.svg?style=flat-square" alt="Sürüm" />
   </a>
   <img src="https://img.shields.io/badge/mimari-Single--File%20HTML-success.svg?style=flat-square" alt="Tek Dosya HTML" />
   <img src="https://img.shields.io/badge/ara%C3%A7lar-22%20Ak%C4%B1ll%C4%B1%20Bile%C5%9Fen-orange.svg?style=flat-square" alt="22 Akıllı Araç" />
